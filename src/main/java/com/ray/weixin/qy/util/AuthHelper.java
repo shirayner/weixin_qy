@@ -1,5 +1,11 @@
 package com.ray.weixin.qy.util;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ray.weixin.qy.config.Env;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
@@ -7,12 +13,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import com.alibaba.fastjson.JSONObject;
-import com.ray.weixin.qy.config.Env;
-import com.ray.weixin.qy.service.invoice.InvoiceService;
 
 
 /**
@@ -25,23 +25,41 @@ import com.ray.weixin.qy.service.invoice.InvoiceService;
 public class AuthHelper {
 	private static final Logger logger = LogManager.getLogger(AuthHelper.class);
 
-	//1.获取access_token的接口地址,有效期为7200秒
+    /**
+     * 1.获取access_token的接口地址,有效期为7200秒
+     */
 	private static final String GET_ACCESSTOKEN_URL="https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=CORPID&corpsecret=CORPSECRET"; 
-	//2.获取getJsapiTicket的接口地址,有效期为7200秒 
+
+    /**
+     *2.获取getJsapiTicket的接口地址,有效期为7200秒
+     */
 	private static final String GET_JSAPITICKET_URL="https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=ACCESS_TOKEN"; 
 
-	//3.获取电子发票ticket
+    /**
+     * 3.获取电子发票ticket
+     */
 	private static final String GET_INVOICE_TICKET_URL="https://qyapi.weixin.qq.com/cgi-bin/ticket/get?access_token=ACCESS_TOKEN&type=wx_card"; 
 
+    /**
+     * 4.通过code换取网页授权access_token
+     */
+	private static final String GET_ACCESSTOKEN_BYCODE_URL="https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 
-	//3.通过code换取网页授权access_token
-	private static final String GET_ACCESSTOKEN_BYCODE_URL="https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code"; 
+
+    /**@desc ：0.获取access_token
+     *
+     * @return
+     * @throws Exception
+     */
+	public static String getAccessToken() throws Exception {
+		return getAccessToken(Env.CORP_ID, Env.AGENT_SECRET);
+	}
 
 	/**
 	 * @desc ：1.获取access_token 
 	 *  
-	 * @param appId  第三方用户唯一凭证
-	 * @param appSecret  第三方用户唯一凭证密钥，即appsecret
+	 * @param corpId  第三方用户唯一凭证
+	 * @param corpSecret  第三方用户唯一凭证密钥，即appsecret
 	 * 
 	 * @return
 	 *      access_token	获取到的凭证
@@ -148,7 +166,7 @@ public class AuthHelper {
 	 *  
 	 * @param appId  第三方用户唯一凭证
 	 * @param appSecret  第三方用户唯一凭证密钥，即appsecret
-	 * @param Code  code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
+	 * @param code  code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
 	 * 
 	 * @return
 	 * access_token	网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
@@ -262,7 +280,7 @@ public class AuthHelper {
 	/**
 	 * @desc ： 4.1 生成签名的函数 
 	 *  
-	 * @param ticket jsticket
+	 * @param jsTicket jsticket
 	 * @param nonceStr 随机串，自己定义
 	 * @param timeStamp 生成签名用的时间戳 
 	 * @param url 需要进行免登鉴权的页面地址，也就是执行dd.config的页面地址 

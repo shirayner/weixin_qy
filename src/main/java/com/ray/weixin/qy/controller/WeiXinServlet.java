@@ -1,19 +1,18 @@
 package com.ray.weixin.qy.controller;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 import com.ray.weixin.qy.config.Env;
 import com.ray.weixin.qy.service.message.reply.ReplyMessageService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 
@@ -35,6 +34,7 @@ public class WeiXinServlet extends HttpServlet {
 	}
 
 	//1.接收  回调模式  的请求
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)  {
 		logger.info("get--------------");
 		//一、校验URL

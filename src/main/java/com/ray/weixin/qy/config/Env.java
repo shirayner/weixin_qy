@@ -36,5 +36,16 @@ public class Env {
 	public final static int AGENT_ID = 1000002;
 
 
+	/**3.服务器配置信息
+	 *
+	 */
+	//服务器配置：域名
+	public final static String HOST_NAME="http://rayge.nat300.top";
+
+	//服务器配置：应用名
+	public final static String APPLICATION_NAME="weixin_qy";
+
+	//服务器配置：访问地址
+	public  final static String BASE_URL=HOST_NAME+APPLICATION_NAME;
 
 }
